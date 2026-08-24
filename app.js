@@ -9,6 +9,7 @@ const PORT = 3000;
 //     res.send("Hello World !")
 // })
 
+// GET REQUEST
 app.get("/api/v1/tour", (req,res) => {
     res.status(200).json({
         status: "success",
@@ -17,12 +18,6 @@ app.get("/api/v1/tour", (req,res) => {
             tours
         }
 
-    })
-})
-
-app.post("/", (req,res) => {
-    res.status(200).json({
-        message: "Data received successfully!"
     })
 })
 
