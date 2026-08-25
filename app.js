@@ -1,26 +1,18 @@
-const express = require('express');
+import express, { json, Router } from 'express';
+import morgan from "morgan";
 
-const app = express();
+import tourRouter from "./routes/tourRoutes.js"
+import userRouter from "./routes/userRoutes.js"
 
-const PORT = 3000;
+export const app = express();
 
-// Can use res.send() to send a response to the client
-// app.get("/", (req,res) => {
-//     res.send("Hello World !")
-// })
+// Middleware which is used to modify the request of the data
+// Automatically parses incoming HTTP request bodies containing JSON data and 
+// makes that data available under the req.body property
+app.use(json())
+app.use(morgan('dev'))
+// To serve the static file. But __dirname is not found with es6 modules.
+// app.use(express.static(`${__dirname}/public`))
 
-// GET REQUEST
-app.get("/api/v1/tour", (req,res) => {
-    res.status(200).json({
-        status: "success",
-        results : tours.length,
-        data : {
-            tours
-        }
-
-    })
-})
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+app.use("/api/v1/tours",tourRouter)
+app.use("/api/v1/users",userRouter)
