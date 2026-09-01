@@ -97,8 +97,21 @@ export const deleteTour = async (req, res) => {
   }
 };
 
-export const deleteAllTours = (req, res) => {
-  res.status(200).json({
-    status: "success",
-  });
+export const deleteAllTours = async (req, res) => {
+  try {
+    const deleteTours = await Tour.deleteMany({})
+
+    res.status(200).json({
+      "status" : "success",
+      "message" : "All documents are deleted successfully !"
+    })
+  }
+  catch(err) {
+    res.status(400).json({
+      "status" : "Failed",
+      "message" : {
+        err
+      }
+    })
+  }
 };
