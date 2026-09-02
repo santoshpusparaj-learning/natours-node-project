@@ -2,9 +2,48 @@ import { Tour } from "../models/tourModel.js";
 
 export const getAllTours = async (req, res) => {
   try {
-    const tours = await Tour.find();
+    const queryObj = { ...req.query };
+
+    //1. Filtering
+    const excludedFields = ["page", "limit", "sort", "fields"];
+    excludedFields.forEach((el) => delete queryObj[el]);
+
+    //2. Advanced Filtering
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+
+    let query = Tour.find(JSON.parse(queryStr));
+
+    //3. Soring
+    if (req.query.sort) {
+      query = query.sort(req.query.sort);
+    } else {
+      query = query.sort("-createdAt");
+    }
+
+    //4. Fields Limiting
+    if (req.query.fields) {
+      const field = req.query.fields.split(",").join(" ");
+      query = query.select(field);
+    } else {
+      query = query.select("-__v");
+    }
+
+    //5. Pagination
+    const page = req.query.pages * 1 || 1;
+    const limit = req.query.limit * 1 || 1;
+    const skip = (page - 1) * limit;
+    query = query.skip(skip).limit(limit);
+
+    if (req.query.pages) {
+      const totalTour = await Tour.countDocuments;
+      if (skip > totalTour) throw new Error("Page does not exist");
+    }
+    const tours = await query;
+
     res.status(200).json({
       status: "success",
+      count: tours.length,
       data: {
         tours,
       },
