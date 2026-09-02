@@ -1,4 +1,4 @@
-import { Tour } from "../models/tourModel";
+import { Tour } from "../models/tourModel.js";
 
 export const getAllTours = (req, res) => {
   res.status(200).json({
@@ -51,15 +51,4 @@ export const deleteAllTours = (req, res) => {
   res.status(200).json({
     status: "success",
   });
-};
-
-//Utility function that will check whether the ID will be valid
-export const checkId = (req, res, next, val) => {
-  if (req.params.id * 1 > tours.length) {
-    return res.status(404).json({
-      status: "fail",
-      message: "Invalid ID",
-    });
-  }
-  next();
 };
