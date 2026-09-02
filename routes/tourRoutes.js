@@ -10,8 +10,6 @@ import {
 
 const router = Router();
 
-router.param("id", checkId);
-
 router.route("/").get(getAllTours).delete(deleteAllTours).post(createTour);
 router.route("/:id").get(getTour).patch(updateTour).delete(deleteTour);
 
